@@ -21,7 +21,7 @@ def box_check(box):
     if box.shape != (3, 3):
         raise ValueError("expect triclinic formatted box")
 
-    if np.all(box, np.zeros((3, 3))):
+    if np.all(box == np.zeros((3, 3))):
         return 'none'
     elif np.all([
             box[0][1] == 0.0,  # Checks that tri box is properly formatted

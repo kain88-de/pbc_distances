@@ -19,6 +19,5 @@ setup(
     version='0.1',
     description='pbc distance calculations',
     author='Max Linke',
-    packages='pbc',
     ext_modules=extensions(),
     zip_safe=False)
