@@ -13,8 +13,8 @@ struct mic {
   std::tuple<VecType, VecType, VecType, VecType>
   operator()(const VecType &x1, const VecType &y1, const VecType &z1,
              const VecType &x2, const VecType &y2, const VecType &z2,
-             const std::vector<T> &box_a, const std::vector<T> &box_b,
-             const std::vector<T> &box_c) {
+             const std::vector<T> & /*box_a*/, const std::vector<T> & /*box_b*/,
+             const std::vector<T> & /*box_c*/) {
     // auto rij = rj - ri;
     auto x12 = x2 - x1;
     auto y12 = y2 - y1;
