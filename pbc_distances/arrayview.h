@@ -41,7 +41,7 @@ public:
   explicit ArrayView(const std::size_t rows_, const std::size_t cols_, const T *data_)
       : m_rows(static_cast<int>(rows_)), m_cols(static_cast<int>(cols_)),
         m_pData(data_) {}
-  // support moving
+  // do not support moving
   ArrayView(ArrayView &&rhs) = delete;
   ArrayView &operator=(ArrayView &&rhs) = delete;
   // do not support copying
@@ -51,8 +51,6 @@ public:
   const T& operator()(int row, int col) const {
     return m_pData[Ordering::IndexOf(row, col, m_rows, m_cols)];
   }
-
-  T &operator()(int row, int col) { return m_pData[Ordering::IndexOf(row, col, m_rows, m_cols)]; }
 
   int rows() const noexcept { return m_rows; };
   int cols() const noexcept { return m_cols; };
