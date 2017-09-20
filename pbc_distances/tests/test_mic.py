@@ -1,5 +1,6 @@
 import itertools
 import numpy as np
+from scipy.spatial.distance import cdist
 
 # import pytest
 
@@ -32,9 +33,14 @@ def pair_dist(pos, box):
 
 def gen_points(d, box_type, num=50):
     # TODO: implement other boxes
-    box = np.array([[d, .5 * d,
-                     .5 * d], [0, .5 * np.sqrt(3) * d, 1 / 6 * np.sqrt(3) * d],
-                    [0, 0, 1 / 3 * np.sqrt(6) * d]])
+    if box_type == 'triclinic':
+        box = np.array([[d, .5 * d, .5 * d],
+                        [0, .5 * np.sqrt(3) * d, 1 / 6 * np.sqrt(3) * d],
+                        [0, 0, 1 / 3 * np.sqrt(6) * d]])
+    elif box_type == 'ortho':
+        box = np.eye(3) * d
+    else:
+        box = np.eye(3)
 
     a, b, c = box.T
     pos = np.random.uniform(0, 1, size=(num, 3))
@@ -46,5 +52,22 @@ def gen_points(d, box_type, num=50):
 def test_triclinic():
     points, box = gen_points(2, 'triclinic')
     ref_dist = pair_dist(points, box)
-    dist = pbc_distances.pairwise_distance(points, points, box, precision='double')
+    dist = pbc_distances.pairwise_distance(
+        points, points, box, precision='double')
+    np.testing.assert_almost_equal(ref_dist, dist)
+
+
+def test_ortho():
+    points, box = gen_points(2, 'ortho')
+    ref_dist = pair_dist(points, box)
+    dist = pbc_distances.pairwise_distance(
+        points, points, box, precision='double')
+    np.testing.assert_almost_equal(ref_dist, dist)
+
+
+def test_none():
+    points, box = gen_points(2, 'ortho')
+    ref_dist = cdist(points, points) ** 2
+    dist = pbc_distances.pairwise_distance(
+        points, points, None, precision='double')
     np.testing.assert_almost_equal(ref_dist, dist)
