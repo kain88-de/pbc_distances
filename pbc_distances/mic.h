@@ -1,13 +1,6 @@
 #ifndef MIC_H
 #define MIC_H
 
-#include <InastempStaticConfig.h>
-#include <cfloat>
-#include <iostream>
-
-#include "arrayview.h"
-#include "vector_helper.h"
-
 struct mic {
   template <typename VecType, typename T>
   std::tuple<VecType, VecType, VecType, VecType>
@@ -16,11 +9,11 @@ struct mic {
              const std::vector<T> & /*box_a*/, const std::vector<T> & /*box_b*/,
              const std::vector<T> & /*box_c*/) {
     // auto rij = rj - ri;
-    auto x12 = x2 - x1;
-    auto y12 = y2 - y1;
-    auto z12 = z2 - z1;
+    const auto x12 = x2 - x1;
+    const auto y12 = y2 - y1;
+    const auto z12 = z2 - z1;
 
-    auto mindist2 = (x12 * x12) + (y12 * y12) + (z12 * z12);
+    const auto mindist2 = (x12 * x12) + (y12 * y12) + (z12 * z12);
     return {mindist2, x12, y12, z12};
   }
 };

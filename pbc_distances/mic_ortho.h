@@ -1,13 +1,6 @@
 #ifndef MIC_ORTHO_H
 #define MIC_ORTHO_H
 
-#include <InastempStaticConfig.h>
-#include <cfloat>
-#include <iostream>
-
-#include "arrayview.h"
-#include "vector_helper.h"
-
 struct mic_ortho {
   template <typename VecType, typename T>
   std::tuple<VecType, VecType, VecType, VecType>
@@ -33,7 +26,7 @@ struct mic_ortho {
     x12 = x12 - box_a[0] * ina_round(VecType(x12 / box_a[0]));
 
     // search in images for minimal distance
-    auto mindist2 = (x12 * x12) + (y12 * y12) + (z12 * z12);
+    const auto mindist2 = (x12 * x12) + (y12 * y12) + (z12 * z12);
     return {mindist2, x12, y12, z12};
   }
 };

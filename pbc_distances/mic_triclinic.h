@@ -2,11 +2,6 @@
 #define MIC_TRICLINIC_H
 
 #include <cfloat>
-#include <iostream>
-
-#include "arrayview.h"
-#include "inastemp_helper.h"
-#include "vector_helper.h"
 
 struct mic_triclinic {
   template <typename VecType, typename T>
@@ -55,6 +50,7 @@ struct mic_triclinic {
 
           // choose smallest distance
           const auto dist2 = (x_rc * x_rc) + (y_rc * y_rc) + (z_rc * z_rc);
+          // have to be updated before mindist2!
           dx = VecType::IfElse(dist2 < mindist2, dx, x_rc);
           dy = VecType::IfElse(dist2 < mindist2, dy, y_rc);
           dz = VecType::IfElse(dist2 < mindist2, dz, z_rc);
@@ -65,6 +61,5 @@ struct mic_triclinic {
     return {mindist2, dx, dy, dz};
   }
 };
-
 
 #endif // MIC_TRICLINIC_H

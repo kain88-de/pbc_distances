@@ -1,6 +1,10 @@
 #ifndef DISTANCE_H
 #define DISTANCE_H
 
+#include <vector>
+
+#include "arrayview.h"
+#include "inastemp_helper.h"
 #include "mic.h"
 #include "mic_ortho.h"
 #include "mic_triclinic.h"

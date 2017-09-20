@@ -2,7 +2,6 @@
 #define DISTANCE_SCALAR_H
 
 #include "distances.h"
-#include "inastemp_helper.h"
 
 template <typename T>
 void _pairwise_distance_triclinic_scalar(const T *a, const int m, const T *b,
