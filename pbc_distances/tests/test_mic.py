@@ -32,7 +32,6 @@ def pair_dist(pos, box):
 
 
 def gen_points(d, box_type, num=50):
-    # TODO: implement other boxes
     if box_type == 'triclinic':
         box = np.array([[d, .5 * d, .5 * d],
                         [0, .5 * np.sqrt(3) * d, 1 / 6 * np.sqrt(3) * d],

@@ -50,7 +50,9 @@ possible option.
 The pbc algorithms are implemented as c++ functors in `mic_*.h`. Having these
 functors allows to decouple them from the actual distance calculations. This
 results in just having to write one distance algorithm and have c++ templates
-figure out the concrete types.
+figure out the concrete types. This design let's us reuse code as much as
+possible and with enabled optimizations `-O3` the compiler is also able to
+remove all boiler plate we created.
 
 To expose the distance to cython it's best to only have pod data types (double,
 float) as a template parameter. Therefore you might need to create one distance
@@ -67,7 +69,7 @@ function that takes an template parameter for the SIMD type to use called
 
    // non vectorized version
    template<typename T>
-   _distance_..._single(...) {
+   _distance_..._scalar(...) {
    using VecType = InaVecSCALAR<T>;
    __distance<VecType, T, mic_func>(...);
    }
@@ -75,3 +77,14 @@ function that takes an template parameter for the SIMD type to use called
 
  As one should note creating a non vectorized version is also simple with
  inastemp as the example above shows.
+
+
+Testing
+=======
+
+Due to the code reuse design we only need to test the minimal image convention
+distances once for every box type. This means there is no need to test all box
+types for all the different distances (pairwise/bond/angle/dihedral) that
+pbc_distances provides.
+
+The different distances can then be tested using no pbc conditions.
