@@ -11,6 +11,11 @@ def extensions():
                           include_dirs=['pbc_distances/inastemp/Src', 'pbc_distances'],
                           extra_compile_args=['-msse4', '-funroll-loops', '-g'],
                           language='c++'))
+    exts.append(Extension('pbc_distances.distance_scalar',
+                          sources=['pbc_distances/distance_scalar.pyx', ],
+                          include_dirs=['pbc_distances/inastemp/Src', 'pbc_distances'],
+                          extra_compile_args=['-msse4', '-funroll-loops', '-g'],
+                          language='c++'))
     return cythonize(exts)
 
 

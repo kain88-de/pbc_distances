@@ -63,7 +63,7 @@ void _pairwise_distance_triclinic(const T *a, const int m, const T *b, const int
 }
 
 template <typename T>
-void _pairwise_distance_triclinic_scaler(const T *a, const int m, const T *b, const int n,
+void _pairwise_distance_triclinic_scalar(const T *a, const int m, const T *b, const int n,
                                          const T *box, T *out) {
   using VecType = InaVecSCALAR<T>;
   __pairwise_distance<VecType, T, mic_triclinic>(a, m, b, n, box, out);
@@ -78,7 +78,7 @@ void _pairwise_distance_ortho(const T *a, const int m, const T *b, const int n,
 }
 
 template <typename T>
-void _pairwise_distance_ortho_scaler(const T *a, const int m, const T *b, const int n,
+void _pairwise_distance_ortho_scalar(const T *a, const int m, const T *b, const int n,
                                          const T *box, T *out) {
   using VecType = InaVecSCALAR<T>;
   __pairwise_distance<VecType, T, mic_ortho>(a, m, b, n, box, out);
@@ -92,7 +92,7 @@ void _pairwise_distance(const T *a, const int m, const T *b, const int n,
 }
 
 template <typename T>
-void _pairwise_distance_scaler(const T *a, const int m, const T *b, const int n,
+void _pairwise_distance_scalar(const T *a, const int m, const T *b, const int n,
                                          const T *box, T *out) {
   using VecType = InaVecSCALAR<T>;
   __pairwise_distance<VecType, T, mic>(a, m, b, n, box, out);

@@ -5,6 +5,7 @@ from scipy.spatial.distance import cdist
 # import pytest
 
 import pbc_distances
+from pbc_distances import distance_scalar
 
 
 def slow_shifts(box):
@@ -68,5 +69,29 @@ def test_none():
     points, box = gen_points(2, 'ortho')
     ref_dist = cdist(points, points) ** 2
     dist = pbc_distances.pairwise_distance(
+        points, points, None, precision='double')
+    np.testing.assert_almost_equal(ref_dist, dist)
+
+
+def test_triclinic_scalar():
+    points, box = gen_points(2, 'triclinic')
+    ref_dist = pair_dist(points, box)
+    dist = distance_scalar.pairwise_distance(
+        points, points, box, precision='double')
+    np.testing.assert_almost_equal(ref_dist, dist)
+
+
+def test_ortho_scalar():
+    points, box = gen_points(2, 'ortho')
+    ref_dist = pair_dist(points, box)
+    dist = distance_scalar.pairwise_distance(
+        points, points, box, precision='double')
+    np.testing.assert_almost_equal(ref_dist, dist)
+
+
+def test_none_scalar():
+    points, box = gen_points(2, 'ortho')
+    ref_dist = cdist(points, points) ** 2
+    dist = distance_scalar.pairwise_distance(
         points, points, None, precision='double')
     np.testing.assert_almost_equal(ref_dist, dist)
