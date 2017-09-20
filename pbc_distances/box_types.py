@@ -1,3 +1,7 @@
+ ##################################################################
+ # pbc_distances - Max Linke - 2017                               #
+ # Under MIT Licence, please you must read the LICENCE.txt file.  #
+ ##################################################################
 import numpy as np
 
 

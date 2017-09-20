@@ -1,6 +1,9 @@
 #ifndef DISTANCE_H
 #define DISTANCE_H
-
+///////////////////////////////////////////////////////////////////
+// pbc_distances - Max Linke - 2017                              //
+// Under MIT Licence, please you must read the LICENCE.txt file. //
+///////////////////////////////////////////////////////////////////
 #include <vector>
 
 #include "arrayview.h"

@@ -1,5 +1,9 @@
+ ##################################################################
+ # pbc_distances - Max Linke - 2017                               #
+ # Under MIT Licence, please you must read the LICENCE.txt file.  #
+ ##################################################################
 import numpy as np
-import box_types
+from . import box_types
 
 cdef extern from 'distances_scalar.h':
     cdef void _pairwise_distance_triclinic_scalar[T](const T *, const int , const T *, const int ,
