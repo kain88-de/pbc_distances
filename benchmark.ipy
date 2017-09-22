@@ -1,0 +1,148 @@
+# -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding:utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
+import numpy as np
+import itertools
+import mdtraj
+import MDAnalysis as mda
+
+from scipy.spatial.distance import cdist
+
+
+from pbc_distances import distance_scalar
+from pbc_distances import distance_sse3
+from pbc_distances import distance_sse4
+from pbc_distances import distance_avx
+
+
+d = 2
+num = 5000
+
+# points
+def gen_points(box, num=5000):
+    a, b, c = box.T
+    print("generate points")
+    num = 5000
+    pos = np.random.uniform(0, 1, size=(num, 3)).astype(np.float32)
+    pos = pos[:, 0][:, np.
+                    newaxis] * a + pos[:, 1][:, np.
+                                            newaxis] * b + pos[:, 2][:, np.
+                                                                    newaxis] * c
+    pos_fortran = np.asarray(pos, order='F', dtype=np.float32)
+    return pos, pos_fortran
+
+modules = {'scalar': distance_scalar,
+           'sse3': distance_sse3,
+           'sse4': distance_sse4,
+           'avx': distance_avx}
+
+print("\nBenchmark TRICLINIC ######################################################")
+
+box = np.array(
+    [[d, .5 * d, .5 * d], [0, .5 * np.sqrt(3) * d, 1 / 6 * np.sqrt(3) * d],
+     [0, 0, 1 / 3 * np.sqrt(6) * d]],
+    dtype=np.float32)
+is_ortho = False
+pos, pos_fortran = gen_points(box, num=num)
+
+print("image search (float)")
+for name, pbc in modules.items():
+    print(name)
+    %timeit pbc.pairwise_distance(pos_fortran, pos_fortran, box)
+
+print()
+print("image search (double)")
+pos_fortran_d = np.empty_like(pos_fortran, order='F', dtype=np.float64)
+pos_fortran_d[:] = pos_fortran
+box_d = np.empty_like(box, dtype=np.float64)
+box_d[:] = box
+for name, pbc in modules.items():
+    print(name)
+    %timeit pbc.pairwise_distance(pos_fortran_d, pos_fortran_d, box_d, precision='double')
+
+print()
+print("MDAnalysis")
+%timeit mda.lib.distances.distance_array(pos, pos, box=box.T)
+
+print()
+print("mdtraj to slow")
+traj = np.empty((1, num, 3), dtype=np.float32)
+traj[0] = pos
+boxes = np.empty((1, 3, 3), dtype=np.float32)
+boxes[0] = box
+pairs = np.array([[i, j] for i in range(num) for j in range(num)], dtype=np.int32)
+out = np.empty((traj.shape[0], pairs.shape[0]), dtype=np.float32)
+%timeit mdtraj.geometry._geometry._dist_mic(traj, pairs, boxes, out, is_ortho)
+
+print("\nBenchmark ORTHO ######################################################")
+
+box = np.eye(3, dtype=np.float32) * d
+is_ortho = True
+pos, pos_fortran = gen_points(box, num=num)
+
+print("image search (float)")
+for name, pbc in modules.items():
+    print(name)
+    %timeit pbc.pairwise_distance(pos_fortran, pos_fortran, box)
+
+print()
+print("image search (double)")
+pos_fortran_d = np.empty_like(pos_fortran, order='F', dtype=np.float64)
+pos_fortran_d[:] = pos_fortran
+box_d = np.empty_like(box, dtype=np.float64)
+box_d[:] = box
+for name, pbc in modules.items():
+    print(name)
+    %timeit pbc.pairwise_distance(pos_fortran_d, pos_fortran_d, box_d, precision='double')
+
+print()
+print("MDAnalysis")
+%timeit mda.lib.distances.distance_array(pos, pos, box=box.T)
+
+print()
+print("mdtraj to slow")
+traj = np.empty((1, num, 3), dtype=np.float32)
+traj[0] = pos
+boxes = np.empty((1, 3, 3), dtype=np.float32)
+boxes[0] = box
+pairs = np.array([[i, j] for i in range(num) for j in range(num)], dtype=np.int32)
+out = np.empty((traj.shape[0], pairs.shape[0]), dtype=np.float32)
+%timeit mdtraj.geometry._geometry._dist_mic(traj, pairs, boxes, out, is_ortho)
+
+print("\nBenchmark NO PBC ######################################################")
+
+box = np.eye(3, dtype=np.float32) * d
+is_ortho = True
+pos, pos_fortran = gen_points(box, num=num)
+box = None
+
+print("image search (float)")
+for name, pbc in modules.items():
+    print(name)
+    %timeit pbc.pairwise_distance(pos_fortran, pos_fortran, box)
+
+print()
+print("image search (double)")
+pos_fortran_d = np.empty_like(pos_fortran, order='F', dtype=np.float64)
+pos_fortran_d[:] = pos_fortran
+box_d = None
+for name, pbc in modules.items():
+    print(name)
+    %timeit pbc.pairwise_distance(pos_fortran_d, pos_fortran_d, box_d, precision='double')
+
+print()
+print("MDAnalysis")
+%timeit mda.lib.distances.distance_array(pos, pos, box=box)
+
+print()
+print("mdtraj to slow")
+traj = np.empty((1, num, 3), dtype=np.float32)
+traj[0] = pos
+boxes = np.empty((1, 3, 3), dtype=np.float32)
+boxes[0] = box
+pairs = np.array([[i, j] for i in range(num) for j in range(num)], dtype=np.int32)
+out = np.empty((traj.shape[0], pairs.shape[0]), dtype=np.float32)
+%timeit mdtraj.geometry._geometry._dist(traj, pairs, out)
+
+print()
+print('scipy')
+%timeit cdist(pos, pos)
