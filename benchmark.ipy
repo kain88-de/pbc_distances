@@ -1,11 +1,12 @@
 # -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding:utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
+from __future__ import print_function
 import numpy as np
 import itertools
 import mdtraj
 import MDAnalysis as mda
-
 from scipy.spatial.distance import cdist
+from collections import OrderedDict
 
 
 from pbc_distances import distance_scalar
@@ -30,10 +31,11 @@ def gen_points(box, num=5000):
     pos_fortran = np.asarray(pos, order='F', dtype=np.float32)
     return pos, pos_fortran
 
-modules = {'scalar': distance_scalar,
-           'sse3': distance_sse3,
-           'sse4': distance_sse4,
-           'avx': distance_avx}
+modules = OrderedDict()
+modules['scalar'] = distance_scalar
+modules['sse3'] = distance_sse3
+modules['sse4'] = distance_sse4
+modules['avx'] = distance_avx
 
 print("\nBenchmark TRICLINIC ######################################################")
 
