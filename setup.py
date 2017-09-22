@@ -4,11 +4,13 @@ from setuptools import Extension, setup
 
 def extensions():
     exts = []
-    exts.append(Extension('pbc_distances.distance',
-                          sources=['pbc_distances/distance.pyx', ],
-                          include_dirs=['pbc_distances/inastemp/Src', 'pbc_distances'],
-                          extra_compile_args=['-msse4', '-funroll-loops', '-std=c++11'],
-                          language='c++'))
+    optimizations = ['sse3', 'sse4', 'avx']
+    for opt in ['sse3', 'sse4', 'avx']:
+        exts.append(Extension('pbc_distances.distance_{}'.format(opt),
+                            sources=['pbc_distances/distance_{}.pyx'.format(opt), ],
+                            include_dirs=['pbc_distances/inastemp/Src', 'pbc_distances'],
+                            extra_compile_args=['-m{}'.format(opt), '-funroll-loops', '-std=c++11'],
+                            language='c++'))
     exts.append(Extension('pbc_distances.distance_scalar',
                           sources=['pbc_distances/distance_scalar.pyx', ],
                           include_dirs=['pbc_distances/inastemp/Src', 'pbc_distances'],
