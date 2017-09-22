@@ -34,7 +34,7 @@ void pairwise_distance__(const T *a, const int m, const T *b, const int n,
       const auto y2 = VecType(&b_view(j, 1));
       const auto z2 = VecType(&b_view(j, 2));
       const auto res = pbc_func()(x1, y1, z1, x2, y2, z2, box_a, box_b, box_c);
-      const auto mindist2 = std::get<0>(res);
+      const auto mindist2 = std::get<0>(res).sqrt();
       // store results
       // out[i * m + j] = mindist2;
       mindist2.storeInArray(&out[i * m + j]);
@@ -54,7 +54,7 @@ void pairwise_distance__(const T *a, const int m, const T *b, const int n,
       const auto z2 = InaVecSCALAR<T>(b_view(j, 2));
       const auto res =
           pbc_func()(sx1, sy1, sz1, x2, y2, z2, box_a, box_b, box_c);
-      const auto mindist2 = std::get<0>(res).getVec();
+      const auto mindist2 = std::get<0>(res).sqrt().getVec();
       out[i * m + j] = mindist2;
       out[j * n + i] = mindist2;
     }
