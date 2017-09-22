@@ -2,10 +2,12 @@ import itertools
 import numpy as np
 from scipy.spatial.distance import cdist
 
-# import pytest
+import pytest
 
-import pbc_distances
 from pbc_distances import distance_scalar
+from pbc_distances import distance_sse3
+from pbc_distances import distance_sse4
+from pbc_distances import distance_avx
 
 
 def slow_shifts(box):
@@ -49,7 +51,9 @@ def gen_points(d, box_type, num=50):
     return pos, box
 
 
-def test_triclinic():
+@pytest.mark.parametrize('pbc_distances', (distance_avx, distance_sse4,
+                                           distance_sse3, distance_scalar))
+def test_triclinic(pbc_distances):
     points, box = gen_points(2, 'triclinic')
     ref_dist = pair_dist(points, box)
     dist = pbc_distances.pairwise_distance(
@@ -57,7 +61,9 @@ def test_triclinic():
     np.testing.assert_almost_equal(ref_dist, dist)
 
 
-def test_ortho():
+@pytest.mark.parametrize('pbc_distances', (distance_avx, distance_sse4,
+                                           distance_sse3, distance_scalar))
+def test_ortho(pbc_distances):
     points, box = gen_points(2, 'ortho')
     ref_dist = pair_dist(points, box)
     dist = pbc_distances.pairwise_distance(
@@ -65,33 +71,11 @@ def test_ortho():
     np.testing.assert_almost_equal(ref_dist, dist)
 
 
-def test_none():
+@pytest.mark.parametrize('pbc_distances', (distance_avx, distance_sse4,
+                                           distance_sse3, distance_scalar))
+def test_none(pbc_distances):
     points, box = gen_points(2, 'ortho')
-    ref_dist = cdist(points, points) ** 2
+    ref_dist = cdist(points, points)**2
     dist = pbc_distances.pairwise_distance(
-        points, points, None, precision='double')
-    np.testing.assert_almost_equal(ref_dist, dist)
-
-
-def test_triclinic_scalar():
-    points, box = gen_points(2, 'triclinic')
-    ref_dist = pair_dist(points, box)
-    dist = distance_scalar.pairwise_distance(
-        points, points, box, precision='double')
-    np.testing.assert_almost_equal(ref_dist, dist)
-
-
-def test_ortho_scalar():
-    points, box = gen_points(2, 'ortho')
-    ref_dist = pair_dist(points, box)
-    dist = distance_scalar.pairwise_distance(
-        points, points, box, precision='double')
-    np.testing.assert_almost_equal(ref_dist, dist)
-
-
-def test_none_scalar():
-    points, box = gen_points(2, 'ortho')
-    ref_dist = cdist(points, points) ** 2
-    dist = distance_scalar.pairwise_distance(
         points, points, None, precision='double')
     np.testing.assert_almost_equal(ref_dist, dist)
