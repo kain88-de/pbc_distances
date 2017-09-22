@@ -33,8 +33,17 @@ InaVecAVX<double> ina_round(InaVecAVX<double> inVec){
 }
 #endif
 
-template<typename T>
-InaVecSCALAR<T> ina_round(InaVecSCALAR<T> inVec){
+template <typename T>
+InaVecBestType<T> ina_round(InaVecBestType<T> inVec){
+  return (inVec + .5).floor();
+}
+
+// explicit declaration to use std::round if no SIMD instructions are allowed
+// (InaVecBest == InaVecSCALAR)
+InaVecSCALAR<float> ina_round(InaVecSCALAR<float> inVec){
+  return std::round(inVec.getVec());
+}
+InaVecSCALAR<double> ina_round(InaVecSCALAR<double> inVec){
   return std::round(inVec.getVec());
 }
 
