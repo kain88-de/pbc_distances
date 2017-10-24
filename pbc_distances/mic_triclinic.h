@@ -5,6 +5,7 @@
 #ifndef MIC_TRICLINIC_H
 #define MIC_TRICLINIC_H
 
+#include <tuple>
 #include <cfloat>
 
 struct mic_triclinic {
@@ -62,7 +63,7 @@ struct mic_triclinic {
         }
       }
     }
-    return {mindist2, dx, dy, dz};
+    return std::make_tuple(mindist2, dx, dy, dz);
   }
 };
 
