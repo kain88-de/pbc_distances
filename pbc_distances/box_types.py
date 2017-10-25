@@ -1,7 +1,7 @@
- ##################################################################
- # pbc_distances - Max Linke - 2017                               #
- # Under MIT Licence, please you must read the LICENCE.txt file.  #
- ##################################################################
+##################################################################
+# pbc_distances - Max Linke - 2017                               #
+# Under MIT Licence, please you must read the LICENCE.txt file.  #
+##################################################################
 import numpy as np
 
 
@@ -32,9 +32,9 @@ def box_check(box):
             box[0][2] == 0.0,
             box[1][2] == 0.0
     ]):
-        return 'ortho'
-    else:
         return 'triclinic'
+    else:
+        return 'ortho'
 
 
 def normalize_box(box):
