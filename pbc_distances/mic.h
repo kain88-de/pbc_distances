@@ -5,6 +5,8 @@
 #ifndef MIC_H
 #define MIC_H
 
+#include <tuple>
+
 struct mic {
   template <typename VecType, typename T>
   std::tuple<VecType, VecType, VecType, VecType>
@@ -18,7 +20,7 @@ struct mic {
     const auto z12 = z2 - z1;
 
     const auto mindist2 = (x12 * x12) + (y12 * y12) + (z12 * z12);
-    return {mindist2, x12, y12, z12};
+    return std::make_tuple(mindist2, x12, y12, z12);
   }
 };
 

@@ -1,11 +1,10 @@
 from Cython.Build import cythonize
 from setuptools import Extension, setup
 
-
 def extensions():
     exts = []
     optimizations = ['sse3', 'sse4', 'avx']
-    for opt in ['sse3', 'sse4', 'avx']:
+    for opt in optimizations:
         exts.append(Extension('pbc_distances.distance_{}'.format(opt),
                             sources=['pbc_distances/distance_{}.pyx'.format(opt), ],
                             include_dirs=['pbc_distances/inastemp/Src', 'pbc_distances'],
