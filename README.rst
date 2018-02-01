@@ -41,6 +41,18 @@ installation
 
    python setup.py install
 
+
+Benchmark Results
+================
+
+The repository contains some benchmark results in the `results_***.md` files.
+It compares the performance of this module with MDAnalysis and mdtraj. The
+possible performance gains using this module are up to a factor of 10. 
+Below is the used CPU and compiler.
+
+gcc = 7.2.1
+CPU = Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz
+
 Guide for Developers
 ====================
 
