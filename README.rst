@@ -32,11 +32,13 @@ Building
 build only the extension
 
 .. code:: bash
+
    python setup.py build_ext -i
 
 installation
 
 .. code:: bash
+
    python setup.py install
 
 Guide for Developers
@@ -60,6 +62,7 @@ function that takes an template parameter for the SIMD type to use called
 `__distance_...(...)` and expose it to cython as
 
 .. code:: c++
+
    // vectorized version
    template<typename T>
    _distance_...(...) {
