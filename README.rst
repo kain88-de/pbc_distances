@@ -5,6 +5,10 @@
 High Performance package to calculate various distances with periodic boundary
 conditions.
 
+.. warning::
+   This project is **alpha software** and not API stable. It serves as an
+   example how to write reusable code with specialized compilation units.
+
 
 Using pbc_distances
 ===================
@@ -13,16 +17,19 @@ To calculate all pair wise distances without periodic boundaries and double prec
 
 .. code:: python
 
-   import pbc_distances
+   from pbc_distances import distance_sse3 as pbc
    import numpy as np
 
    pos = np.random.uniform(-1, 1, size=(5000, 3))
 
-   dist = pbc_distances.pairwise_distance(pos, pos, box=None, precision='double')
+   dist = pbc.pairwise_distance(pos, pos, box=None, precision='double')
 
 If you have periodic boundary condition just supply the box argument.
 pbc_distances will try to figure out what box you supplied and use the
 appropriate algorithm.
+
+The above example uses the SSE3 implementation. Please have a look into the
+setup.py which SIMD instruction sets are currently compiled.
 
 Besides pairwise distances `pbc_distances` also supports bond, angle and dihedral.
 
